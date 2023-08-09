@@ -131,7 +131,7 @@ document.getElementById("razorpay").onclick = async function (e) {
         document.getElementById("message1").innerHTML =
           "You are a premium user";
         localStorage.setItem('token', data1.token);
-        console.log('data1')
+        console.log('data3')
         //console.log(token,'.>>>>>>')
       },
     };
