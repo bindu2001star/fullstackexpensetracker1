@@ -32,6 +32,8 @@
                 if(response.status===200){
                     alert(response.data.message);
                     alert("log in successfully");
+                    localStorage.setItem('token',response.data.token)
+                    window.location.href="/expense.html";//redirect to expense html
                    
                 }
                 else if(response.status===400){
