@@ -1,6 +1,6 @@
 const Expense = require("../model/userexpense");
 const auth = require("../middleware/Auth");
-const user = require("../model/user");
+const User = require("../model/user");
 
 async function addexpense(req, res) {
   try {
@@ -12,9 +12,19 @@ async function addexpense(req, res) {
       category: category,
       userId: req.user.id,
     })
-
       .then((expense) => {
-        return res.status(200).json({ expense, success: true });
+        const totalamountofexpense =
+          Number(req.user.totalexpense) + Number(amount);
+        User.update(
+          {
+            totalexpense: totalamountofexpense,
+          },
+          {
+            where: { id: req.user.id },
+          }
+        ).then(async () => {
+          return res.status(200).json({ expense, success: true });
+        });
       })
       .catch((error) => {
         return res.status(403).json({ success: false, error: err });
@@ -45,7 +55,6 @@ async function getExpenses(req, res) {
     console.log("USERId: ", userId);
 
     const data = await Expense.findAll({ where: { userId: userId } })
-   
     .then((expenses) => {
       console.log(JSON.stringify({ expenses }));
       return res.status(200).json({ success: true, expenses });
@@ -59,9 +68,11 @@ async function getExpenses(req, res) {
 async function deleteExpense(req, res) {
   try {
     const expenseId = req.params.id;
-    const dltexpense = await Expense.destroy({ where: { id: expenseId,userId:req.user.id } })
+    const dltexpense = await Expense.destroy({
+      where: { id: expenseId, userId: req.user.id },
+    })
       .then((expense) => {
-        console.log("deleted the expensesswsss")
+        console.log("deleted the expensesswsss");
         return res.status(200).json({ success: true, expense });
       })
       .catch((error) => {
