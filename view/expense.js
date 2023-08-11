@@ -175,6 +175,7 @@ function showonleaderboard() {
     leaderboardelement.innerHTML += `<h1>LEADERBOARD</h1>`;
     userleaderboardarray.data.forEach((userDetail) => {
       leaderboardelement.innerHTML += `Name:${userDetail.name}--Total:${userDetail.total_cost}    `;
+      document.getElementById("message1").style.visibility='hidden';
     });
   };
   document.getElementById("message1").appendChild(inputelement);
