@@ -67,7 +67,9 @@ const updatetransectionstatus = async (req, res, next) => {
       .json({ success: false, message: "Internal Server Error" });
   }
 };
+
 module.exports = {
   purchasePremium: purchasePremium,
   updatetransectionstatus: updatetransectionstatus,
+  
 };

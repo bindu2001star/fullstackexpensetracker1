@@ -28,10 +28,12 @@ app.get('/login',(req,res)=>{
 const userRoute=require('./routes/users');
 const expenseRoute=require('./routes/expenses');
 const purchaseRoute=require('./routes/purchase');
+const premiumRoute=require('./routes/premiumes');
 
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
 app.use('/purchase',purchaseRoute);
+app.use('/premium',premiumRoute);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -39,7 +41,7 @@ Expense.belongsTo(User);
 User.hasMany(order);
 order.belongsTo(User)
 
-sequelize.sync()
+sequelize.sync({force:false})
 .then(()=>{
     console.log('details synchronised with database')
 })

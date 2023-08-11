@@ -47,6 +47,7 @@ window.addEventListener("DOMContentLoaded", async function getExpense() {
   const isadmin = decodetoken.ispremiumuser;
   if (isadmin) {
     showpremiumonscreen();
+    showonleaderboard();
   }
   // try {
   //     // { headers: { "Authorization": token } }
@@ -97,7 +98,7 @@ function adddnewExpensetoui(expense) {
         }
       );
       location.reload();
-      console.log(response);
+      //console.log(response);
     } catch (err) {
       console.log(err.message);
     }
@@ -116,9 +117,9 @@ document.getElementById("razorpay").onclick = async function (e) {
     console.log(response.data);
     var options = {
       " key": response.data.key_id,
-      "order_id": response.data.order.id,
+      order_id: response.data.order.id,
       handler: async function (response) {
-        const data1=await axios.post(
+        const data1 = await axios.post(
           "http://localhost:10000/purchase/updatetransectionstatus",
           {
             order_id: options.order_id,
@@ -127,11 +128,14 @@ document.getElementById("razorpay").onclick = async function (e) {
           { headers: { Authorization: token } }
         );
         alert("Congratulations!!! You are a premium User Now");
+
         document.getElementById("razorpay").style.visibility = "hidden";
         document.getElementById("message1").innerHTML =
           "You are a premium user";
-        localStorage.setItem('token', data1.token);
-        console.log('data3')
+        console.log("data from purchasing token ", response);
+        console.log("dataaaaaaa", data1);
+        localStorage.setItem("token", data1.data.token);
+        showonleaderboard();
         //console.log(token,'.>>>>>>')
       },
     };
@@ -154,3 +158,24 @@ document.getElementById("razorpay").onclick = async function (e) {
     console.log(err.message);
   }
 };
+function showonleaderboard() {
+  const inputelement = document.createElement("input");
+  inputelement.type = "button";
+  inputelement.value = "show leaderboard";
+  inputelement.onclick = async () => {
+    const token = localStorage.getItem("token");
+    const userleaderboardarray = await axios.get(
+      "http://localhost:10000/premium/showLeaderboard",
+      {
+        headers: { Authorization: token },
+      }
+    );
+    console.log(userleaderboardarray);
+    var leaderboardelement = document.getElementById("leaderboard");
+    leaderboardelement.innerHTML += `<h1>LEADERBOARD</h1>`;
+    userleaderboardarray.data.forEach((userDetail) => {
+      leaderboardelement.innerHTML += `Name:${userDetail.name}--Total:${userDetail.total_cost}  /  `;
+    });
+  };
+  document.getElementById("message1").appendChild(inputelement);
+}
