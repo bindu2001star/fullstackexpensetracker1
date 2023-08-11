@@ -1,34 +1,36 @@
-const User=require('../model/user');
-const Expense=require('../model/userexpense');
-const Sequelize=require('../util/database');
+const User = require("../model/user");
+const Expense = require("../model/userexpense");
+const sequelize = require("../util/database");
+const Sequelize = require("../util/database");
 const premiumfeatures = async (req, res, next) => {
-    try{
-        const users=await User.findAll();
-        const expenses=await Expense.findAll();
-        const aggregatedexpenses={}
-        expenses.forEach(expense=>{
-            if(aggregatedexpenses[expense.userId]){
-                aggregatedexpenses[expense.userId]=aggregatedexpenses[expense.userId]+expense.amount
-            }
-            else{
-                aggregatedexpenses[expense.userId]=expense.amount;
-            }
-        })
-        var userleadrdetails=[];
-        users.forEach((user)=>{
-            userleadrdetails.push({name:user.name,total_cost:aggregatedexpenses[user.id]||0})
+  try {
+    const leaderboardofusers= await User.findAll({
+       
+        attributes: [
+          'id','name'
+          [sequelize.fn('sum', sequelize.col('amount')), 'total_cost'],
+        ],
+        includes:[{
+            model:Expense,
+            attributes:[]
 
-        })
-        console.log("aggggreegatt",aggregatedexpenses);
-        userleadrdetails.sort((a,b)=>b.total_cost-a.total_cost)
-        return res.status(200).json(userleadrdetails);
-
-
-    }catch(err){
-        console.log(err);
-        return res.status(500).json({err});
-    }
- 
+        }],
+        group: ['user.id'],
+    })
+    return res.status(200).json(leaderboardofusers)
+    // const expenses = await Expense.findAll({
+    //   //attributes:['userId','amount']
+    //  // attributes: [
+    //   //  "userId",
+    //    // [sequelize.fn("sum", sequelize.col("amount")), "total_cost"],
+    //  // ],
+    //  // group: ["userId"],
+    // });
+  
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ err });
+  }
 };
 
 module.exports = {
