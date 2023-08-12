@@ -6,24 +6,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    body{
+        background-color: rgb(230, 234, 200);
+    }
+    
+    input{
+       border-radius: 5px;
+        margin-top: 20px;
+       width:15rem;
+
+    }
+    #category{
+        margin-top: 20px;
+    }
+    label{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: larger;
+        font-weight: bolder;
+      
+    }
+    button{
+        margin-top: 20px;
+    }
+    #form1{
+        background-color: rgb(216, 213, 213);
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+       
+       
+    }
+    button{
+        background-color: rgba(101, 105, 105, 0.651);
+        color: azure;
+    }
+    button:hover{
+        background-color: rgb(72, 71, 71);
+        font-size: larger;
+        font-weight: bolder;
+    }
+    #message1{
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: larger;
+    }
+    #leaderboard{
+        font-weight: bolder;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: larger;
+
+    }
+    #expense{
+        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-weight: bolder;
+    }
+</style>
 <body>
     <h1>Expense Tracker</h1>
-    <form onsubmit="addnewExpense(event)">
-        <label for="amount">Enter the amount:</label>
-        <input type="number" id="amount" name="amount" required>
-        <label for="description">Enter the expense Description:</label>
-        <input type="text" id="description" name="description" required>
-        <label for="category">Choose Category : </label>
-        <select id="category" name="category"><br>
-            <option value="shopping">shopping</option>
-            <option value="travelling">Travelling</option>
-            <option value="Food">Restaurant</option>
-            <option value="miscellaneous">Miscellaneous</option>
-            
-        </select>
-        <button type="submit">Add expense</button>
-        
-
+    <div id="form1">
+        <form onsubmit="addnewExpense(event)">
+            <label for="amount">Enter the amount:</label>
+            <input type="number" id="amount" name="amount" required><br>
+            <label for="description">Enter the expense Description:</label>
+            <input type="text" id="description" name="description" required><br>
+            <label for="category">Choose Category : </label>
+            <select id="category" name="category"><br>
+                <option value="shopping">shopping</option>
+                <option value="travelling">Travelling</option>
+                <option value="Food">Restaurant</option>
+                <option value="miscellaneous">Miscellaneous</option>
+                
+            </select><br>
+            <button type="submit">Add expense</button>
+    </div>
+    
     </form>
     <button id="razorpay">Buy Premium</button>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

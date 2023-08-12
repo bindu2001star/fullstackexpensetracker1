@@ -7,91 +7,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4aaf1;
-    }
+  .signup1{
+    background-image: url(signup.jpg);
+   
+  }
+  .container{
+    height: 450px;
+    width: 400px;
+    background-color: rgb(153, 180, 231);
+    margin-left: 5rem;
+    margin-top: 5rem;
+    border-radius: 1rem;
+  }
+  
+ label{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: larger;
+  color: rgb(14, 14, 15);
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 20px;
+ }
+ input{
+  display: block;
+  border-radius: 0.5rem;
+  width: 17rem;
+  padding: 5px;
+ }
+ #nep{
+  padding: 2rem;
+  margin: 20px;
+  border-color: coral;
+  /* justify-content: center; */
+ }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-
-    }
-
-    form {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 5px;
-      width: 350px;
-    }
-
-    h2 {
-      font-size: 28px;
-      color: #034e04;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    label {
-      color: #333333;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      padding: 10px;
-      margin-bottom: 10px;
-      width: 95%;
-      border: 1px solid #cccccc;
-      border-radius: 5px;
-    }
-
-    input[type="submit"] {
-      padding: 10px 20px;
-      background-color: #034e04;
-      color: #ffffff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: auto;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #45a049;
-    }
-
-    p {
-      text-align: center;
-      font-weight: bold;
-    }
+ #submit1:hover{
+  background-color: rgb(31, 31, 194);
+  color: rgb(236, 229, 229);
+  font-size: larger;
+  font-weight: bolder;
+ }
+ p{
+  margin-top: -1rem;
+  font-weight: bold;
+ }
+ 
   </style>
 
 </head>
 
-<body>
+<body class="signup1">
   <div class="container">
 
     <form id="signupForm">
-      <h2 style="color: #034e04;">Sign Up</h2>
-      <label for="name">Username:</label>
-      <input type="text" id="name" name="name" required>
-
+      
+      <div id="nep">
+      <h2 style="color: #060806;">Sign Up</h2>
+      <div1>
+        <label for="name">Username:</label>
+        <input type="text" id="name" name="name" required>
+      </div1>
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" required>
 
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
+      <input type="password" id="password" name="password" required><br>
 
-      <input type="submit" value="Sign Up">
+      <input id="submit1" type="submit" value="Sign Up">
+      </div>
+  
     </form>
     <p style="text-align: center;">Already have an account? <a href="/login">Login</a></p>
   </div>
