@@ -20,7 +20,10 @@ async function addexpense(req, res) {
     // const totalExpense = await Expense.sum("amount", { where: { userId } });
     // const total1=parseInt(totalExpense)+parseInt(amount);
    let existUser=await User.findOne({where:{id:userId}})
+   //console.log(existUser,"existtttttttttttttttttt");
    let old_total=parseInt(existUser.totalexpense);
+   console.log(old_total,"olllllllllllllllllllllddddddddd");
+   if(isNaN(old_total)) {old_total=0}
    new_total=parseInt((old_total*1)+(amount*1))
     await User.update({ totalexpense: new_total }, { where: {id: userId },transaction:t}).then(async()=>{
       await t.commit();
@@ -32,22 +35,7 @@ async function addexpense(req, res) {
   }
 }
 async function getExpenses(req, res) {
-  // try {
-  //     const userId = req.users.id;
-  //     console.log(userId, 'userid...');
-  //     //{where:{userId:req.users.id}}
-  //     const expensess = await Expense.findAll({where:{userId:userId}})
-  //         .then(expenses => {
-  //             console.log(JSON.stringify({ expenses }));
-  //             return res.status(200).json({ success: true, expenses })
-  //         })
-  //         .catch(err => {
-  //             console.log(err)
-  //             return res.status(500).json({ success: false, error: err })
-  //         })
-  // } catch (err) {
-  //     console.log(err);
-  // }
+  
   try {
     const userId = req.user.id;
     console.log("USERId: ", userId);
@@ -67,18 +55,25 @@ async function getExpenses(req, res) {
 async function deleteExpense(req, res) {
   try {
     const expenseId = req.params.id;
-    const dltexpense = await Expense.destroy({
-      where: { id: expenseId, userId: req.user.id },
-    })
-      .then((expense) => {
-        console.log("deleted the expensesswsss");
-        return res.status(200).json({ success: true, expense });
-      })
-      .catch((error) => {
-        return res.status(404).send({ message: "something went wrong" });
-      });
-  } catch (err) {
-    console.log(err);
+
+    // Retrieve the expense that is going to be deleted
+    const expense = await Expense.findByPk(expenseId);
+    if (!expense) {
+      return res.status(404).send({ message: 'Expense not found' });
+    }
+    // Delete the expense from the database
+    await Expense.destroy({ where: { id: expenseId } });
+    const userId = req.user.id;
+    // Recalculate the total expense for the user
+    const totalExpense = await Expense.sum('amount', { where: { userId } });
+
+    // Update the totalexpense field in the users table
+    await User.update({ totalexpense: totalExpense }, { where: { id: userId } });
+
+    res.send({ message: 'Expense deleted successfully!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Error deleting expense.' });
   }
 }
 module.exports = {
