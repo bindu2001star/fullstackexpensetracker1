@@ -67,9 +67,16 @@
    }
    #login1:hover{
     background-color: rgb(249, 145, 9);
+    font-size: larger;
    }
    #div{
     position: relative;top:-20px;
+   }
+   #forgotpassword:hover{
+    background-color: hwb(48 4% 5%);
+    color: rgb(20, 19, 19);
+    font-size: larger;
+
    }
 </style>
 
@@ -82,7 +89,8 @@
             <label for="password">Password:</label>
             <input  class="input" type="password" id="password" name="password" placeholder="Enter your password" required><br>
             <input  class="input" id="login1" type="submit" value="Login">
-            <button class="button" id="forgotpassword">Forgot password</button>
+            <!-- <p class="button" id="forgotpassword"><a href="/password.html">Forgot password</a></p> -->
+            <input class="button" id="forgotpassword" type ="submit" value="Forgot password">
         <p>New user? click here <a href="/">sign up</a></p>
         </div>
        
@@ -114,6 +122,11 @@
                 console.log(err.message);
 
             }
+
+        }
+        const fpw=document.getElementById('forgotpassword');
+        fpw.onclick=()=>{
+            window.location.href='/password.html';
 
         }
     </script>

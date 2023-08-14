@@ -29,11 +29,13 @@ const userRoute=require('./routes/users');
 const expenseRoute=require('./routes/expenses');
 const purchaseRoute=require('./routes/purchase');
 const premiumRoute=require('./routes/premiumes');
+const passwordRoute=require('./routes/forgotpassword');
 
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
 app.use('/purchase',purchaseRoute);
 app.use('/premium',premiumRoute);
+app.use('/password',passwordRoute);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

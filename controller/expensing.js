@@ -20,10 +20,10 @@ async function addexpense(req, res) {
     // const totalExpense = await Expense.sum("amount", { where: { userId } });
     // const total1=parseInt(totalExpense)+parseInt(amount);
    let existUser=await User.findOne({where:{id:userId}})
-   //console.log(existUser,"existtttttttttttttttttt");
+   
    let old_total=parseInt(existUser.totalexpense);
-   console.log(old_total,"olllllllllllllllllllllddddddddd");
-   if(isNaN(old_total)) {old_total=0}
+   //console.log(old_total,"olllllllllllllllllllllddddddddd");
+   if(isNaN(old_total)) {old_total=0};
    new_total=parseInt((old_total*1)+(amount*1))
     await User.update({ totalexpense: new_total }, { where: {id: userId },transaction:t}).then(async()=>{
       await t.commit();
