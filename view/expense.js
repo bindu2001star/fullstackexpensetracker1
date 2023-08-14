@@ -15,10 +15,10 @@ async function addnewExpense(e) {
       headers: { Authorization: token },
     });
     console.log(response.headers);
-    console.log("Expense data sent to the server:", response.data.expense);
-    adddnewExpensetoui(response.data.expense);
+    console.log("Expense data sent to the server:", response.data.expenses);
+    adddnewExpensetoui(response.data.expenses);
   } catch (err) {
-    console.log(" the error is ", error);
+    console.log(" the error is ", err);
   }
 }
 function showpremiumonscreen() {
