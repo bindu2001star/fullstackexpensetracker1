@@ -80,7 +80,7 @@ window.addEventListener("DOMContentLoaded", async function getExpense() {
   }
 });
 function adddnewExpensetoui(expense) {
-  const expenselist = document.getElementById("expense");
+  const expenselist = document.getElementById("expenses");
   const expenseId = `expense-${expense.id}`;
   const li = document.createElement("li");
   li.textContent = `Amount:${expense.amount}--description:${expense.description}--category:${expense.category}`;
@@ -159,24 +159,69 @@ document.getElementById("razorpay").onclick = async function (e) {
   }
 };
 function showonleaderboard() {
-  const inputelement = document.createElement("input");
-  inputelement.type = "button";
-  inputelement.value = "show leaderboard";
-  inputelement.onclick = async () => {
-    const token = localStorage.getItem("token");
-    const userleaderboardarray = await axios.get(
-      "http://localhost:10000/premium/showLeaderboard",
-      {
-        headers: { Authorization: token },
-      }
-    );
-    console.log(userleaderboardarray);
-    var leaderboardelement = document.getElementById("leaderboard");
-    leaderboardelement.innerHTML += `<h1>LEADERBOARD</h1>`;
-    userleaderboardarray.data.forEach((userDetail) => {
-      leaderboardelement.innerHTML += `Name:${userDetail.name}--Total:${userDetail.totalexpense}   \n `;
-      document.getElementById("message1").style.visibility = "hidden";
-    });
+  
+  document.getElementById("razorpay").style.visibility = "hidden";
+  document.getElementById("message1").innerHTML = "You are a premium user";
+  const leaderButton = document.createElement("button");
+  leaderButton.innerHTML = "Show Leaderboard";
+  leaderButton.onclick = async () => {
+    let token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.get(
+        "http://localhost:10000/premium/showLeaderboard",
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      const leaderboardData = response.data;
+      console.log("LEADERBOARD DATA : ", leaderboardData);
+
+      document.getElementById("message").innerHTML = "";
+      leaderboardData.forEach((item) => {
+        const li = document.createElement("li");
+        li.className = "listLeaders";
+        li.textContent = `Name: ${item.name} - Total Expense : ${item.totalexpense}`;
+        document.getElementById("message").appendChild(li);
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
   };
-  document.getElementById("message1").appendChild(inputelement);
+  const downloadReportBtn = document.createElement('button');
+  downloadReportBtn.innerHTML = "Download Report";
+  downloadReportBtn.onclick = async function(){
+      downloadReport();
+  }
+  const premiumFeaturesSection = document.getElementById('premium-features');
+  premiumFeaturesSection.innerHTML = '';
+  premiumFeaturesSection.appendChild(leaderButton);
+  premiumFeaturesSection.appendChild(downloadReportBtn);
+}
+async function downloadReport(){
+  try{
+    const token=localStorage.getItem('token');
+    console.log('downloadingggg');
+    const response=await axios.get("http://localhost:10000/expense/downloadreport",{
+      headers:{Authorization:token}
+    });
+    if(response.status===200){
+      const fileUrl=response.data.fileURL;
+      console.log("FILEURL: ", fileUrl);
+      const a=document.createElement('a');
+      a.href=response.data.fileURL;
+      a.download=`Expense.txt`;
+      a.click();
+    }else{
+      console.log('Errorr in downloading');
+      throw new Error(response.data.message);
+    }
+
+
+  }catch(err){
+    console.log(err);
+
+  }
+
 }

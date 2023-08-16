@@ -43,7 +43,7 @@ Expense.belongsTo(User);
 User.hasMany(order);
 order.belongsTo(User)
 
-sequelize.sync({force:true})
+sequelize.sync({force:false})
 .then(()=>{
     console.log('details synchronised with database')
 })
