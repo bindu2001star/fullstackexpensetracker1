@@ -202,13 +202,12 @@ function showonleaderboard() {
 async function downloadReport(){
   try{
     const token=localStorage.getItem('token');
-    console.log('downloadingggg');
     const response=await axios.get("http://localhost:10000/expense/downloadreport",{
       headers:{Authorization:token}
     });
     if(response.status===200){
       const fileUrl=response.data.fileURL;
-      console.log("FILEURL: ", fileUrl);
+     console.log("FILEURL: ", fileUrl);
       const a=document.createElement('a');
       a.href=response.data.fileURL;
       a.download=`Expense.txt`;
