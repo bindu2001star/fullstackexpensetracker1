@@ -5,6 +5,7 @@ const { where } = require("sequelize");
 const sequelize = require("../util/database");
 const UserService=require('../services/userService');
 const s3=require('../services/s3');
+const DownloadReport=require('../model/downloadreport');
 
 
 async function addexpense(req, res) {
@@ -103,6 +104,10 @@ const downloadReport = async (req, res, next) => {
       const bufferData=Buffer.from(stringifiedExpenses,'utf-8');
       console.log(filename,"FILENAME");
       const fileURL = await s3.uploadToS3(bufferData,filename);
+      await DownloadReport.create({
+        userId:userId,
+        URL:fileURL
+      })
       res.status(200).json({ fileURL, success: true });
 
     }else{

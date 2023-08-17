@@ -17,6 +17,7 @@ app.use(cors());
 const User=require('./model/user');
 const Expense=require('./model/userexpense');
 const order=require('./model/order');
+const downloadReport=require('./model/downloadreport');
 
 
 app.get('/',(req,res)=>{
@@ -41,9 +42,12 @@ User.hasMany(Expense);
 Expense.belongsTo(User);
 
 User.hasMany(order);
-order.belongsTo(User)
+order.belongsTo(User);
 
-sequelize.sync({force:false})
+User.hasMany(downloadReport);
+downloadReport.belongsTo(User);
+
+sequelize.sync({force:true})
 .then(()=>{
     console.log('details synchronised with database')
 })
