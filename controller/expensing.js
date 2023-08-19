@@ -3,10 +3,9 @@ const auth = require("../middleware/Auth");
 const User = require("../model/user");
 const { where } = require("sequelize");
 const sequelize = require("../util/database");
-const UserService=require('../services/userService');
-const s3=require('../services/s3');
-const DownloadReport=require('../model/downloadreport');
-
+const UserService = require("../services/userService");
+const s3 = require("../services/s3");
+const DownloadReport = require("../model/downloadreport");
 
 async function addexpense(req, res) {
   const t = await sequelize.transaction();
@@ -49,16 +48,34 @@ async function addexpense(req, res) {
   }
 }
 async function getExpenses(req, res) {
+  const userId = req.user.id;
+  const page = +req.query.page || 1;
+  const pageSize = +req.query.pageSize || 3;
   try {
-    const userId = req.user.id;
-    console.log("USERId: ", userId);
-
-    const data = await Expense.findAll({ where: { userId: userId } }).then(
-      (expenses) => {
-        console.log(JSON.stringify({ expenses }));
-        return res.status(200).json({ success: true, expenses });
-      }
-    );
+    // const userId = req.user.id;
+    // console.log("USERId: ", userId);
+    // const data = await Expense.findAll({ where: { userId: userId } }).then(
+    //   (expenses) => {
+    //     console.log(JSON.stringify({ expenses }));
+    //     return res.status(200).json({ success: true, expenses });
+    //   }
+    // );
+    const { count, rows: expenses } = await Expense.findAndCountAll({
+      where: { userId },
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+      order: [["id", "DESC"]],
+    });
+    res.status(200).json({
+      allExpense: expenses,
+      totalExpense: count,
+      currentPage: page,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      hasNextpage: pageSize * page < count,
+      hasPreviousPage: page > 1,
+      lastPage: Math.ceil(count / pageSize),
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -94,30 +111,29 @@ async function deleteExpense(req, res) {
 }
 
 const downloadReport = async (req, res, next) => {
-  try{
-    if(req.user.ispremiumuser===true){
+  try {
+    if (req.user.ispremiumuser === true) {
       const expenses = await UserService.getExpenses(req);
-      console.log("expensesssssss",expenses);
+      console.log("expensesssssss", expenses);
       const stringifiedExpenses = JSON.stringify(expenses);
-      const userId=req.user.id;
+      const userId = req.user.id;
       const filename = `Expense${userId}/${new Date()}.txt`;
-      const bufferData=Buffer.from(stringifiedExpenses,'utf-8');
-      console.log(filename,"FILENAME");
-      const fileURL = await s3.uploadToS3(bufferData,filename);
+      const bufferData = Buffer.from(stringifiedExpenses, "utf-8");
+      console.log(filename, "FILENAME");
+      const fileURL = await s3.uploadToS3(bufferData, filename);
       await DownloadReport.create({
-        userId:userId,
-        URL:fileURL
-      })
+        userId: userId,
+        URL: fileURL,
+      });
       res.status(200).json({ fileURL, success: true });
-
-    }else{
-      res.status(403).json({message:'Only Premium Users can download the report.'})
+    } else {
+      res
+        .status(403)
+        .json({ message: "Only Premium Users can download the report." });
     }
-  }catch(err){
-    console.log("error while downloading ",err.message)
-
+  } catch (err) {
+    console.log("error while downloading ", err.message);
   }
- 
 };
 module.exports = {
   addexpense: addexpense,

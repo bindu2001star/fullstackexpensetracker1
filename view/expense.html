@@ -65,6 +65,12 @@
         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         font-weight: bolder;
     }
+    #expensesperpage:hover{
+        cursor: pointer;
+
+    }
+   
+   
 </style>
 <body>
     <h1>Expense Tracker</h1>
@@ -94,10 +100,19 @@
     <div id="premium-features"></div>
     <div id="message" class="list-group"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
-   
-
-   
-   
+    
+    <div class="text-center mb-2">
+        <label for="category" id="expensesperpage">Expenses per page: </label>
+            <a id="expensesperpage" class="btn btn-outline-success" onclick="pageSize(3)">3</a>
+            <a id="expensesperpage" class="btn btn-outline-success" onclick="pageSize(5)">5</a>
+            <a id="expensesperpage" class="btn btn-outline-success" onclick="pageSize(7)">7</a>
+            <a id="expensesperpage" class="btn btn-outline-success" onclick="pageSize(9)">9</a>
+     
+       
+        
+    </div>
+          <ul class="pagination justify-content-center" id="pagination">
+          </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script src="./expense.js"></script>

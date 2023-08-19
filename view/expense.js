@@ -45,26 +45,16 @@ window.addEventListener("DOMContentLoaded", async function getExpense() {
   const decodetoken = parseJwt(token);
   console.log(decodetoken);
   const isadmin = decodetoken.ispremiumuser;
+  pageSize();
   if (isadmin) {
     showpremiumonscreen();
     showonleaderboard();
+   
   }
-  // try {
-  //     // { headers: { "Authorization": token } }
-  //     const response = await axios.get('http://localhost:10000/expense/Getexpense',{ headers: { "Authorization": token } });
-  //     console.log("checking response", response);
-  //     const data = response.data;
-  //     console.log(data);
-  //     response.data.expenses.forEach(expense => {
 
-  //         adddnewExpensetoui(expense);
-  //     })
-  // } catch (err) {
-  //     console.log(err.message);
-  // }
   try {
     const response = await axios.get(
-      "http://localhost:10000/expense/getExpense",
+      "http://localhost:10000/expense/GetExpense",
       {
         headers: { " Authorization": token },
       }
@@ -72,13 +62,28 @@ window.addEventListener("DOMContentLoaded", async function getExpense() {
     console.log("CHECKING RESPONSE", response);
     const data = response.data;
     console.log("data printing : ", data);
-    data.expenses.forEach((expense) => {
+    data.allExpense.forEach((expense) => {
       adddnewExpensetoui(expense);
     });
   } catch (err) {
     console.log("Error Loading Expenses : ", err.message);
   }
 });
+async function pageSize(value) {
+  try {
+    const token = localStorage.getItem("token");
+    localStorage.setItem("pageSize", `${value}`);
+    const page = 1;
+    const response = await axios.get(
+      `http://localhost:10000/expense/GetExpense?page=${page}&pageSize=${value}`,
+      { headers: { Authorization: token } }
+    );
+    console.log("RESPONSE FROM PAGINATION", response.data);
+    showPagination(response.data);
+  } catch (err) {
+    console.log("ERROR while pagination", err.message);
+  }
+}
 function adddnewExpensetoui(expense) {
   const expenselist = document.getElementById("expenses");
   const expenseId = `expense-${expense.id}`;
@@ -159,7 +164,6 @@ document.getElementById("razorpay").onclick = async function (e) {
   }
 };
 function showonleaderboard() {
-  
   document.getElementById("razorpay").style.visibility = "hidden";
   document.getElementById("message1").innerHTML = "You are a premium user";
   const leaderButton = document.createElement("button");
@@ -189,38 +193,95 @@ function showonleaderboard() {
       console.log(err.message);
     }
   };
-  const downloadReportBtn = document.createElement('button');
+  const downloadReportBtn = document.createElement("button");
   downloadReportBtn.innerHTML = "Download Report";
-  downloadReportBtn.onclick = async function(){
-      downloadReport();
-  }
-  const premiumFeaturesSection = document.getElementById('premium-features');
-  premiumFeaturesSection.innerHTML = '';
+  downloadReportBtn.onclick = async function () {
+    downloadReport();
+  };
+  const premiumFeaturesSection = document.getElementById("premium-features");
+  premiumFeaturesSection.innerHTML = "";
   premiumFeaturesSection.appendChild(leaderButton);
   premiumFeaturesSection.appendChild(downloadReportBtn);
 }
-async function downloadReport(){
-  try{
-    const token=localStorage.getItem('token');
-    const response=await axios.get("http://localhost:10000/expense/downloadreport",{
-      headers:{Authorization:token}
-    });
-    if(response.status===200){
-      const fileUrl=response.data.fileURL;
-     console.log("FILEURL: ", fileUrl);
-      const a=document.createElement('a');
-      a.href=response.data.fileURL;
-      a.download=`Expense.txt`;
+async function downloadReport() {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      "http://localhost:10000/expense/downloadreport",
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (response.status === 200) {
+      const fileUrl = response.data.fileURL;
+      console.log("FILEURL: ", fileUrl);
+      const a = document.createElement("a");
+      a.href = response.data.fileURL;
+      a.download = `Expense.txt`;
       a.click();
-    }else{
-      console.log('Errorr in downloading');
+    } else {
+      console.log("Errorr in downloading");
       throw new Error(response.data.message);
     }
-
-
-  }catch(err){
+  } catch (err) {
     console.log(err);
-
   }
+}
+//
+function showPagination({
+  currentPage,
+  previousPage,
+  nextPage,
+  hasNextPage,
+  hasPreviousPage,
+  lastPage,
+}) {
+  try {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+    const creatButton = (pageNum) => {
+      const btn = document.createElement("button");
+      btn.innerHTML = pageNum;
+      btn.addEventListener("click", () => getProducts(pageNum));
+      pagination.appendChild(btn);
+    };
+    if (hasPreviousPage) {
+      creatButton(previousPage);
+    }
+    
+    creatButton(currentPage);
 
+    if (hasNextPage) {
+      creatButton(nextPage);
+    }
+    if (currentPage !== lastPage && lastPage !== nextPage) {
+      creatButton(lastPage);
+    }
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+async function getProducts(page) {
+  try {
+    const token = localStorage.getItem("token");
+    const pageSize = localStorage.getItem("pageSize");
+    const response = await axios.get(
+      `http://localhost:10000/expense/getExpense?page=${page}&pageSize=${pageSize}`,
+      {
+        headers: { Authorization: token },
+      }
+    );
+
+    const expenses = response.data.allExpense;
+    console.log("PRINTING EXPENSES IN GETEXPENSESBYPAGE FUN", expenses);
+    const expensesList = document.getElementById("expenses");
+    expensesList.innerHTML = "";
+    expenses.forEach((expense) => {
+      adddnewExpensetoui(expense);
+    });
+    showPagination(response.data);
+  } catch (err) {
+    console.log(err.message);
+  }
 }

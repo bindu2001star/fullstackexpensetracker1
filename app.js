@@ -6,12 +6,10 @@ var cors = require('cors');
 const sequelize=require('./util/database');
 
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'view')));
 app.use(cors());
-
 
 
 const User=require('./model/user');
@@ -47,7 +45,7 @@ order.belongsTo(User);
 User.hasMany(downloadReport);
 downloadReport.belongsTo(User);
 
-sequelize.sync({force:true})
+sequelize.sync({force:false})
 .then(()=>{
     console.log('details synchronised with database')
 })
