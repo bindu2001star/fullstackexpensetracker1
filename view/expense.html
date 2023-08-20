@@ -101,7 +101,7 @@
     <div id="message" class="list-group"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     
-    <div class="text-center mb-2">
+    <!-- <div class="text-center mb-2">
         <label for="category" id="expensesperpage">Expenses per page: </label>
             <a id="expensesperpage" class="btn btn-outline-success" onclick="pageSize(3)">3</a>
             <a id="expensesperpage" class="btn btn-outline-success" onclick="pageSize(5)">5</a>
@@ -110,9 +110,24 @@
      
        
         
-    </div>
-          <ul class="pagination justify-content-center" id="pagination">
-          </ul>
+    </div> -->
+    <select id="NumberofRecords" >
+        <option value="none" selected disabled hidden>
+            Select an Option </option>
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+        </select> 
+        <button class="btn btn-secondary" onclick="pageSize()">
+            Get
+        </button> 
+        <div id="list" style="text-align:center;">
+
+        </div> 
+        <div id="pagination" style="text-align:center;"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script src="./expense.js"></script>

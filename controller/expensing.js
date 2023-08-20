@@ -72,7 +72,7 @@ async function getExpenses(req, res) {
       currentPage: page,
       nextPage: page + 1,
       previousPage: page - 1,
-      hasNextpage: pageSize * page < count,
+      hasnextpage: pageSize * page < count,
       hasPreviousPage: page > 1,
       lastPage: Math.ceil(count / pageSize),
     });

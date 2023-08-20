@@ -40,7 +40,7 @@ function parseJwt(token) {
 
   return JSON.parse(jsonPayload);
 }
-window.addEventListener("DOMContentLoaded", async function getExpense() {
+window.addEventListener("DOMContentLoaded", async function getExpense(page) {
   const token = localStorage.getItem("token");
   const decodetoken = parseJwt(token);
   console.log(decodetoken);
@@ -49,7 +49,6 @@ window.addEventListener("DOMContentLoaded", async function getExpense() {
   if (isadmin) {
     showpremiumonscreen();
     showonleaderboard();
-   
   }
 
   try {
@@ -59,23 +58,27 @@ window.addEventListener("DOMContentLoaded", async function getExpense() {
         headers: { " Authorization": token },
       }
     );
+   
     console.log("CHECKING RESPONSE", response);
     const data = response.data;
     console.log("data printing : ", data);
     data.allExpense.forEach((expense) => {
       adddnewExpensetoui(expense);
     });
+    showPagination(response.data);
   } catch (err) {
     console.log("Error Loading Expenses : ", err.message);
   }
 });
-async function pageSize(value) {
+
+async function pageSize() {
   try {
     const token = localStorage.getItem("token");
-    localStorage.setItem("pageSize", `${value}`);
+    const pageSize=document.getElementById("NumberofRecords").value;
+    localStorage.setItem("pageSize",document.getElementById("NumberofRecords").value); 
     const page = 1;
     const response = await axios.get(
-      `http://localhost:10000/expense/GetExpense?page=${page}&pageSize=${value}`,
+      `http://localhost:10000/expense/GetExpense?page=${page}&pageSize=${pageSize}`,
       { headers: { Authorization: token } }
     );
     console.log("RESPONSE FROM PAGINATION", response.data);
@@ -232,33 +235,54 @@ function showPagination({
   currentPage,
   previousPage,
   nextPage,
-  hasNextPage,
+  hasnextPage,
   hasPreviousPage,
   lastPage,
 }) {
   try {
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
-    const creatButton = (pageNum) => {
-      const btn = document.createElement("button");
-      btn.innerHTML = pageNum;
-      btn.addEventListener("click", () => getProducts(pageNum));
-      pagination.appendChild(btn);
-    };
     if (hasPreviousPage) {
-      creatButton(previousPage);
+      const prevBtn = document.createElement("button");
+      prevBtn.innerHTML = `<a class="page-link">Previous</a>`;
+      prevBtn.addEventListener("click", async () => {
+        await getProducts(previousPage);
+      });
+      pagination.appendChild(prevBtn);
+      pagination.append(" ");
     }
-    
-    creatButton(currentPage);
 
-    if (hasNextPage) {
-      creatButton(nextPage);
+    //current page code
+    
+      const currBtn = document.createElement("button");
+      currBtn.innerHTML = `<a class="page-link">currentpage</a>`;
+      currBtn.addEventListener("click", async () => {
+        await getProducts(currentPage);
+      });
+      pagination.appendChild(currBtn);
+
+    //next page code
+    if (hasnextPage) {
+
+      const nextBtn = document.createElement("button");
+      nextBtn.innerHTML = `<a class="page-link">Next</a>`;
+      nextBtn.addEventListener("click", async () => {
+        await getProducts(nextPage);
+      });
+      pagination.appendChild(nextBtn);
     }
-    if (currentPage !== lastPage && lastPage !== nextPage) {
-      creatButton(lastPage);
-    }
+    if(currentPage!==lastPage && lastPage!==nextPage){
+      const lastBtn = document.createElement("button");
+      lastBtn.innerHTML = `<a class="page-link">currentpage</a>`;
+      lasrBtn.addEventListener("click", async () => {
+        await getProducts(currentPage);
+      });
+      pagination.appendChild(lastBtn);
+
+     
+  }
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
 }
 
@@ -266,6 +290,7 @@ async function getProducts(page) {
   try {
     const token = localStorage.getItem("token");
     const pageSize = localStorage.getItem("pageSize");
+    console.log("localStorage.getItem");
     const response = await axios.get(
       `http://localhost:10000/expense/getExpense?page=${page}&pageSize=${pageSize}`,
       {
@@ -274,7 +299,7 @@ async function getProducts(page) {
     );
 
     const expenses = response.data.allExpense;
-    console.log("PRINTING EXPENSES IN GETEXPENSESBYPAGE FUN", expenses);
+    console.log("PRINTING EXPENSES IN GETEXPENSESBYPAGE FUN",response.data );
     const expensesList = document.getElementById("expenses");
     expensesList.innerHTML = "";
     expenses.forEach((expense) => {
