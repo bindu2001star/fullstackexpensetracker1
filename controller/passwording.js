@@ -1,13 +1,36 @@
 const bcrypt = require("bcrypt");
-const uuid = require("uuid");
-const sendinblue = require("sib-api-v3-sdk");
+const uuid = require('uuid');
+//const sendinblue = require("sib-api-v3-sdk");
 const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../model/user");
 const Password = require("../model/passwords");
+const nodemailer=require('nodemailer');
+const {USER,APP_PASSWORD}=require('../env.js')
+
+// const transporter = nodemailer.createTransport({
+//   service:'gmail',
+//   host: "smtp.gmail.com",
+//   auth: {
+//     user: process.env.USER,
+//     pass: process.env.APP_PASSWORD
+//   },
+// });
+// const mailOptions={
+//   from: {
+//     name:'BINDU',
+//     address:process.env.USER
+//   }, // sender address
+//     to: ["himabindusambangi@gmail.com"], // list of receivers
+//     subject: "send email using nodemailer", // Subject line
+//     text: "Hello world?", // plain text body
+//     html: "<b>Hello world?</b>",
+// }
+
 
 User.hasMany(Password);
 Password.belongsTo(User);
+
 
 async function forgotpassword(req, res, next) {
   try {
@@ -21,32 +44,55 @@ async function forgotpassword(req, res, next) {
       const resetPassword = { id: id, isActive: true };
       const resetpassword = await user.createPassword(resetPassword);
       console.log(resetpassword, "passsworddddddddd");
-      const client = sendinblue.ApiClient.instance;
-      const apiKey = client.authentications["api-key"];
-      apiKey.apiKey = process.env.API_KEY;
-      console.log("Check the API Key", apiKey.apiKey);
-      const tranEmailApi = new sendinblue.TransactionalEmailsApi();
-      const sender = {
-        email: "himabindusambangi@gmail.com",
-      };
-      const receivers = [
-        {
-          email: `${email}`,
+      const transporter = nodemailer.createTransport({
+        service:'gmail',
+        host: "smtp.gmail.com",
+        port: 10000,
+        secure: true,
+        auth: {
+          // user: process.env.USER,
+          // pass: process.env.APP_PASSWORD
+          user:USER,
+          pass:APP_PASSWORD
         },
-      ];
-
-      const reset = tranEmailApi.sendTransacEmail({
-        sender,
-        to: receivers,
-        subject: "reset password",
-        textContent: `Reset your password here`,
-        htmlContent: `<a href="http://localhost:10000/password/reset-password/${id}">Reset Password</a>`,
       });
+      const mailOptions= await transporter.sendMail({
+        from: {
+          name: 'BINDU',
+          address: process.env.USER
+        },
+        to: ["himabindusambangi@gmail.com"],
+        subject: "send email using nodemailer to RESET PASSWORD",
+        text: `RESET YOUR PASSWORD HERE`,
+        html: `<a href="http://localhost:10000/password/reset-password/${id}">Reset Password</a>`,
+      })
+
+//       const client = sendinblue.ApiClient.instance;
+//       const apiKey = client.authentications["api-key"];
+//       apiKey.apiKey = process.env.API_KEY;
+//       console.log("Check the API Key", apiKey.apiKey);
+//       const tranEmailApi = new sendinblue.TransactionalEmailsApi();
+//       const sender = {
+//         email: "himabindusambangi@gmail.com",
+//       };
+      
+//       const receivers = [
+//         {
+//           email: `${email}`,
+//         },
+//       ];
+//       const reset = await tranEmailApi.sendTransacEmail({
+//         sender,
+//         to: receivers,
+//         subject: "reset password",
+//         textContent: `Reset your password here`,
+//         htmlContent: `<a href="http://localhost:10000/password/reset-password/${id}">Reset Password</a>`,
+//       });
       console.log("email sent successfully");
-      res.status(200).json({ message: "Email sent successfully" });
+      return res.status(200).json({ message: "Email sent successfully" ,mailOptions});
     }
   } catch (err) {
-    console.log("Error message in FPC", err.message);
+    console.log("Error message in FPC", err);
     res.status(400).json({ error: err });
   }
 }

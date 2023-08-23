@@ -96,6 +96,7 @@ function adddnewExpensetoui(expense) {
   const deltbtn = document.createElement("input");
   deltbtn.type = "button";
   deltbtn.value = "Delete";
+  
   deltbtn.onclick = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -274,7 +275,7 @@ function showPagination({
     if(currentPage!==lastPage && lastPage!==nextPage){
       const lastBtn = document.createElement("button");
       lastBtn.innerHTML = `<a class="page-link">currentpage</a>`;
-      lasrBtn.addEventListener("click", async () => {
+      lastBtn.addEventListener("click", async () => {
         await getProducts(currentPage);
       });
       pagination.appendChild(lastBtn);
