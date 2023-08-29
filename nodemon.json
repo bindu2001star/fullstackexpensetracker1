@@ -1,0 +1,15 @@
+{
+    "env":{
+        "DB_NAME" : "trackerexpense",
+        "DB_USERNAME" : "root",
+        "DB_PASSWORD":"BINDU@2001#123",
+        "DB_HOST" : "localhost",
+       "BUCKET_NAME" : "expensetracker12334",
+       "IAM_USER_KEY" : "AKIAXA5SPWPI44DQDMUA",
+      "IAM_USER_SECRET" : "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",
+      "RAZORPAY_KEY_ID": "rzp_test_qcboEyvl05XZ8g",
+      "RAZORPAY_KEY_SECRET": "Nf3gpE6kxUiw156dOp6scAp7"
+
+
+    }
+}

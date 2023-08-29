@@ -56,12 +56,13 @@ async function forgotpassword(req, res, next) {
           pass:APP_PASSWORD
         },
       });
+      
       const mailOptions= await transporter.sendMail({
         from: {
           name: 'BINDU',
           address: process.env.USER
         },
-        to: ["himabindusambangi@gmail.com"],
+        to: [email],
         subject: "send email using nodemailer to RESET PASSWORD",
         text: `RESET YOUR PASSWORD HERE`,
         html: `<a href="http://localhost:10000/password/reset-password/${id}">Reset Password</a>`,

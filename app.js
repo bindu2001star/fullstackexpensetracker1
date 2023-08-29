@@ -4,12 +4,23 @@ const bodyParser = require('body-parser')
 const app = express();
 var cors = require('cors');
 const sequelize=require('./util/database');
+//const helmet=require('helmet');
+const compression=require('compression');
+const morgan=require('morgan');
+const fs=require('fs');
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'view')));
 app.use(cors());
+
+const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{
+    flags:'a'
+})
+
+app.use(compression());
+app.use(morgan('combined',{stream:accessLogStream}));
 
 
 const User=require('./model/user');
@@ -29,6 +40,7 @@ const expenseRoute=require('./routes/expenses');
 const purchaseRoute=require('./routes/purchase');
 const premiumRoute=require('./routes/premiumes');
 const passwordRoute=require('./routes/forgotpassword');
+const { Stream } = require('stream');
 
 app.use('/user',userRoute);
 app.use('/expense',expenseRoute);
@@ -38,6 +50,7 @@ app.use('/password',passwordRoute);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
+
 
 User.hasMany(order);
 order.belongsTo(User);
@@ -52,4 +65,4 @@ sequelize.sync({force:false})
 .catch((err)=>{
     console.log('failed to synchronise with database')
 })
-app.listen(10000);
+app.listen(process.env.PORT || 10000);
