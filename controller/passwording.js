@@ -8,29 +8,8 @@ const Password = require("../model/passwords");
 const nodemailer=require('nodemailer');
 const {USER,APP_PASSWORD}=require('../env.js')
 
-// const transporter = nodemailer.createTransport({
-//   service:'gmail',
-//   host: "smtp.gmail.com",
-//   auth: {
-//     user: process.env.USER,
-//     pass: process.env.APP_PASSWORD
-//   },
-// });
-// const mailOptions={
-//   from: {
-//     name:'BINDU',
-//     address:process.env.USER
-//   }, // sender address
-//     to: ["himabindusambangi@gmail.com"], // list of receivers
-//     subject: "send email using nodemailer", // Subject line
-//     text: "Hello world?", // plain text body
-//     html: "<b>Hello world?</b>",
-// }
-
-
 User.hasMany(Password);
 Password.belongsTo(User);
-
 
 async function forgotpassword(req, res, next) {
   try {
@@ -65,7 +44,7 @@ async function forgotpassword(req, res, next) {
         to: [email],
         subject: "send email using nodemailer to RESET PASSWORD",
         text: `RESET YOUR PASSWORD HERE`,
-        html: `<a href="http://localhost:10000/password/reset-password/${id}">Reset Password</a>`,
+        html: `<a href="http://54.157.219.108:10000/password/reset-password/${id}">Reset Password</a>`,
       })
 
 //       const client = sendinblue.ApiClient.instance;
@@ -87,7 +66,7 @@ async function forgotpassword(req, res, next) {
 //         to: receivers,
 //         subject: "reset password",
 //         textContent: `Reset your password here`,
-//         htmlContent: `<a href="http://localhost:10000/password/reset-password/${id}">Reset Password</a>`,
+//         htmlContent: `<a href="http://54.157.219.108:10000/password/reset-password/${id}">Reset Password</a>`,
 //       });
       console.log("email sent successfully");
       return res.status(200).json({ message: "Email sent successfully" ,mailOptions});

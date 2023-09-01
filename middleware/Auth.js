@@ -6,7 +6,7 @@ exports.authenticate=async(req,res,next)=>{
         const token = req.header("Authorization");
         console.log("token value : ",token);
          if(!token){
-             return res.status(401).json({message:"Unauthorised: Token not provided"})
+             return res.status(401).json({sucess:false})
         }
 
         const secretKey = 'secretKey'

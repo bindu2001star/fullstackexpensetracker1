@@ -3,7 +3,7 @@
         "DB_NAME" : "trackerexpense",
         "DB_USERNAME" : "root",
         "DB_PASSWORD":"BINDU@2001#123",
-        "DB_HOST" : "localhost",
+        "DB_HOST" : "54.157.219.108",
        "BUCKET_NAME" : "expensetracker12334",
        "IAM_USER_KEY" : "AKIAXA5SPWPI44DQDMUA",
       "IAM_USER_SECRET" : "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",

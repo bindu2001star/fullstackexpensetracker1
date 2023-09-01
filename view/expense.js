@@ -53,7 +53,8 @@ window.addEventListener("DOMContentLoaded", async function getExpense(page) {
 
   try {
     const response = await axios.get(
-      "http://localhost:10000/expense/GetExpense",
+      "http://54.157.219.108:10000/expense/GetExpense",
+      //"http://54.157.219.108:10000/expense/GetExpense",
       {
         headers: { " Authorization": token },
       }
@@ -78,7 +79,8 @@ async function pageSize() {
     localStorage.setItem("pageSize",document.getElementById("NumberofRecords").value); 
     const page = 1;
     const response = await axios.get(
-      `http://localhost:10000/expense/GetExpense?page=${page}&pageSize=${pageSize}`,
+      `http://54.157.219.108:10000/expense/GetExpense?page=${page}&pageSize=${pageSize}`,
+      //`http:// 54.157.219.108:10000/expense/GetExpense?page=${page}&pageSize=${pageSize}`,
       { headers: { Authorization: token } }
     );
     console.log("RESPONSE FROM PAGINATION", response.data);
@@ -101,7 +103,7 @@ function adddnewExpensetoui(expense) {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.delete(
-        `http://localhost:10000/expense/deleteExpense/${expense.id}`,
+        `http://54.157.219.108:10000/expense/deleteExpense/${expense.id}`,
         {
           headers: { " Authorization": token },
         }
@@ -118,7 +120,7 @@ document.getElementById("razorpay").onclick = async function (e) {
   const token = localStorage.getItem("token");
   try {
     const response = await axios.get(
-      "http://localhost:10000/purchase/premiumMembership",
+      "http://54.157.219.108:10000/purchase/premiumMembership",
       {
         headers: { Authorization: token },
       }
@@ -129,7 +131,7 @@ document.getElementById("razorpay").onclick = async function (e) {
       order_id: response.data.order.id,
       handler: async function (response) {
         const data1 = await axios.post(
-          "http://localhost:10000/purchase/updatetransectionstatus",
+          "http://54.157.219.108:10000/purchase/updatetransectionstatus",
           {
             order_id: options.order_id,
             payment_id: response.razorpay_payment_id,
@@ -154,7 +156,7 @@ document.getElementById("razorpay").onclick = async function (e) {
 
     razor.on("payment.failed", async function (response) {
       await axios.post(
-        "http://localhost:10000/purchase/updatetransectionstatus",
+        "http://54.157.219.108:10000/purchase/updatetransectionstatus",
         {
           status: "failed",
           order_id: options.order_id,
@@ -177,7 +179,8 @@ function showonleaderboard() {
 
     try {
       const response = await axios.get(
-        "http://localhost:10000/premium/showLeaderboard",
+        "http://54.157.219.108:10000/premium/showLeaderboard",
+        //"http://54.157.219.108:10000/premium/showLeaderboard",
         {
           headers: { Authorization: token },
         }
@@ -211,7 +214,8 @@ async function downloadReport() {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:10000/expense/downloadreport",
+      "http://54.157.219.108:10000/expense/downloadreport",
+      //"http://54.157.219.108:10000/expense/downloadreport"
       {
         headers: { Authorization: token },
       }
@@ -293,7 +297,8 @@ async function getProducts(page) {
     const pageSize = localStorage.getItem("pageSize");
     console.log("localStorage.getItem");
     const response = await axios.get(
-      `http://localhost:10000/expense/getExpense?page=${page}&pageSize=${pageSize}`,
+      `http://54.157.219.108:10000/expense/getExpense?page=${page}&pageSize=${pageSize}`,
+     //`http://54.157.219.108:10000/expense/getExpense?page=${page}&pageSize=${pageSize}`,
       {
         headers: { Authorization: token },
       }
