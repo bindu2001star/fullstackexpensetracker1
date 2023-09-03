@@ -7,22 +7,22 @@ const app = express();
 var cors = require('cors');
 const sequelize=require('./util/database');
 //const helmet=require('helmet');
-const compression=require('compression');
-const morgan=require('morgan');
+//const compression=require('compression');
+//const morgan=require('morgan');
 const fs=require('fs');
 
 console.log(process.env.DB_NAME);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static(path.join(__dirname,'view')));
+//app.use(bodyParser.urlencoded({extended:true}));
+
 app.use(cors());
 
 const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{
     flags:'a'
 })
 
-app.use(compression());
-app.use(morgan('combined',{stream:accessLogStream}));
+//app.use(compression());
+//app.use(morgan('combined',{stream:accessLogStream}));
 
 
 const User=require('./model/user');
@@ -31,12 +31,12 @@ const order=require('./model/order');
 const downloadReport=require('./model/downloadreport');
 
 
-app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname,'view','signup.html'));
-}); 
-app.get('/login',(req,res)=>{
-    res.sendFile(path.join(__dirname,'view','login.html'));
-})
+// app.get('/',(req,res)=>{
+//     res.sendFile(path.join(__dirname,'view','signup.html'));
+// }); 
+// app.get('/login',(req,res)=>{
+//     res.sendFile(path.join(__dirname,'view','login.html'));
+// })
 const userRoute=require('./routes/users');
 const expenseRoute=require('./routes/expenses');
 const purchaseRoute=require('./routes/purchase');
@@ -49,11 +49,11 @@ app.use('/expense',expenseRoute);
 app.use('/purchase',purchaseRoute);
 app.use('/premium',premiumRoute);
 app.use('/password',passwordRoute);
-
-app.use((req,res)=>{
-    console.log('urlllllllll1111',req.url);
-    res.sendFile(path.join(__dirname,`view/${req.url}`));
-})
+app.use(express.static(path.join(__dirname,'view')));
+// app.use((req,res)=>{
+//     console.log('urlllllllll1111',req.url);
+//     res.sendFile(path.join(__dirname,`view/${req.url}`));
+// })
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
