@@ -1,3 +1,5 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
@@ -9,7 +11,7 @@ const compression=require('compression');
 const morgan=require('morgan');
 const fs=require('fs');
 
-
+console.log(process.env.DB_NAME);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'view')));
@@ -68,6 +70,6 @@ sequelize.sync({force:false})
     console.log('details synchronised with database')
 })
 .catch((err)=>{
-    console.log('failed to synchronise with database')
+    console.log(err)
 })
-app.listen(process.env.PORT || 10000);
+app.listen(process.env.PORT || 3000);
