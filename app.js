@@ -31,12 +31,12 @@ const order=require('./model/order');
 const downloadReport=require('./model/downloadreport');
 
 
-// app.get('/',(req,res)=>{
-//     res.sendFile(path.join(__dirname,'view','signup.html'));
-// }); 
-// app.get('/login',(req,res)=>{
-//     res.sendFile(path.join(__dirname,'view','login.html'));
-// })
+app.get('/',(req,res)=>{
+    res.sendFile(path.join(__dirname,'view','signup.html'));
+}); 
+app.get('/login',(req,res)=>{
+    res.sendFile(path.join(__dirname,'view','login.html'));
+})
 const userRoute=require('./routes/users');
 const expenseRoute=require('./routes/expenses');
 const purchaseRoute=require('./routes/purchase');
