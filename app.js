@@ -17,9 +17,9 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{
-    flags:'a'
-})
+// const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{
+//     flags:'a'
+// })
 
 //app.use(compression());
 //app.use(morgan('combined',{stream:accessLogStream}));
@@ -50,10 +50,10 @@ app.use('/purchase',purchaseRoute);
 app.use('/premium',premiumRoute);
 app.use('/password',passwordRoute);
 app.use(express.static(path.join(__dirname,'view')));
-// app.use((req,res)=>{
-//     console.log('urlllllllll1111',req.url);
-//     res.sendFile(path.join(__dirname,`view/${req.url}`));
-// })
+ app.use((req,res)=>{
+    console.log('urlllllllll1111',req.url);
+     res.sendFile(path.join(__dirname,`view/${req.url}`));
+})
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
