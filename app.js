@@ -32,7 +32,7 @@ const order=require('./model/order');
 const downloadReport=require('./model/downloadreport');
 
 
-app.get('/',(req,res)=>{
+app.get('/signup',(req,res)=>{
     res.sendFile(path.join(__dirname,'view','signup.html'));
 }); 
 app.get('/login',(req,res)=>{
