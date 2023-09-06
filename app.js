@@ -10,6 +10,7 @@ const sequelize=require('./util/database');
 //const compression=require('compression');
 //const morgan=require('morgan');
 const fs=require('fs');
+console.log("git polling");
 
 console.log(process.env.DB_NAME);
 app.use(bodyParser.json());
