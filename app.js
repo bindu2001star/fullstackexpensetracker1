@@ -13,7 +13,7 @@ const fs=require('fs');
 
 console.log(process.env.DB_NAME);
 app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(cors());
 
